@@ -1,29 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { refreshSpxTrackingAction, deleteOrderAction } from '@/app/actions';
+import { useState } from 'react';
+import { deleteOrderAction } from '@/app/actions';
 
 export default function OrderCard({ order }) {
-  const [trackingData, setTrackingData] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  const fetchTracking = async () => {
-    setLoading(true);
-    setError('');
-    const result = await refreshSpxTrackingAction(order.trackingNumber);
-    if (result.error) {
-      setError(result.error);
-    } else {
-      setTrackingData(result.data?.data || {});
-    }
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    fetchTracking();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const [showIframe, setShowIframe] = useState(false);
 
   const handleDelete = async () => {
     if (confirm(`Bạn có chắc chắn muốn xóa mã ${order.trackingNumber}?`)) {
@@ -31,23 +12,8 @@ export default function OrderCard({ order }) {
     }
   };
 
-  // Cố gắng tìm trạng thái mới nhất từ JSON trả về
-  let latestStatus = 'Đang tải trạng thái...';
-  if (!loading && trackingData) {
-    if (trackingData.tracking_list && trackingData.tracking_list.length > 0) {
-      latestStatus = trackingData.tracking_list[0].message || trackingData.tracking_list[0].status;
-    } else if (trackingData.status) {
-      latestStatus = trackingData.status;
-    } else if (Object.keys(trackingData).length === 0) {
-      latestStatus = 'Hệ thống SPX đang chặn lấy dữ liệu tự động. Vui lòng bấm [🌐 XEM SPX] bên dưới.';
-    } else {
-      latestStatus = 'Đã có dữ liệu (Click Xem chi tiết SPX)';
-    }
-  }
-  if (error) latestStatus = `Lỗi: ${error}`;
-
   return (
-    <div className="memphis-card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+    <div className="memphis-card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', height: '100%' }}>
       <div className="flex-between">
         <h3 style={{ wordBreak: 'break-all' }}>{order.trackingNumber}</h3>
         <button className="memphis-button danger" onClick={handleDelete} style={{ padding: '0.25rem 0.75rem' }}>XÓA</button>
@@ -58,23 +24,48 @@ export default function OrderCard({ order }) {
         <strong>Ghi chú:</strong> {order.note}
       </div>
 
-      <div className="tracking-step">
-        <strong style={{ display: 'block', marginBottom: '4px' }}>Trạng thái hiện tại:</strong>
-        {loading ? <span>⏳ Đang lấy dữ liệu SPX...</span> : <span>{latestStatus}</span>}
-      </div>
-
-      <div className="flex-gap" style={{ marginTop: 'auto' }}>
-        <button className="memphis-button" onClick={fetchTracking} disabled={loading} style={{ flex: 1 }}>
-          🔄 CẬP NHẬT
+      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <button 
+          className="memphis-button" 
+          onClick={() => setShowIframe(!showIframe)} 
+          style={{ width: '100%' }}
+        >
+          {showIframe ? 'ĐÓNG TRẠNG THÁI' : 'TẢI TRẠNG THÁI (TRỰC TIẾP)'}
         </button>
+
+        {showIframe && (
+          <div style={{
+            width: '100%',
+            height: '350px', // Chiều cao khung nhìn hiển thị
+            overflow: 'hidden',
+            border: '2px solid black',
+            backgroundColor: 'white',
+            position: 'relative'
+          }}>
+            {/* Iframe Clipping - Đẩy iframe lên trên để giấu header/search bar của SPX */}
+            <iframe 
+              src={`https://spx.vn/track?${order.trackingNumber}`}
+              style={{
+                position: 'absolute',
+                top: '-180px', // Kéo lên trên 180px để giấu đi phần thanh tìm kiếm của SPX
+                left: '0',
+                width: '100%',
+                height: '800px', // Để iframe đủ dài để có thể cuộn bên trong (nếu cần)
+                border: 'none'
+              }}
+              scrolling="yes"
+            />
+          </div>
+        )}
+
         <a 
           href={`https://spx.vn/track?${order.trackingNumber}`} 
           target="_blank" 
           rel="noopener noreferrer"
-          style={{ flex: 1, textDecoration: 'none' }}
+          style={{ textDecoration: 'none' }}
         >
           <button className="memphis-button secondary" style={{ width: '100%' }}>
-            🌐 XEM SPX
+            🌐 MỞ TRANG SPX
           </button>
         </a>
       </div>
