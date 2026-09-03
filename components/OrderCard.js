@@ -39,7 +39,7 @@ export default function OrderCard({ order }) {
     } else if (trackingData.status) {
       latestStatus = trackingData.status;
     } else if (Object.keys(trackingData).length === 0) {
-      latestStatus = 'Không có thông tin hành trình (Có thể sai mã hoặc mã cũ)';
+      latestStatus = 'Hệ thống SPX đang chặn lấy dữ liệu tự động. Vui lòng bấm [🌐 XEM SPX] bên dưới.';
     } else {
       latestStatus = 'Đã có dữ liệu (Click Xem chi tiết SPX)';
     }
