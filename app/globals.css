@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap');
+
+:root {
+  --color-bg: #fdf6e3;
+  --color-primary: #ff477e;
+  --color-secondary: #00f5d4;
+  --color-tertiary: #fee440;
+  --color-text: #1a1a1a;
+  --color-border: #000000;
+  
+  --shadow-offset: 6px;
+  --border-width: 3px;
+  
+  --font-main: 'Space Grotesk', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-main);
+  background-image: radial-gradient(var(--color-border) 1px, transparent 1px);
+  background-size: 20px 20px;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  text-transform: uppercase;
+  letter-spacing: -1px;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Memphis Style Components */
+.memphis-card {
+  background-color: white;
+  border: var(--border-width) solid var(--color-border);
+  box-shadow: var(--shadow-offset) var(--shadow-offset) 0px var(--color-border);
+  padding: 1.5rem;
+  border-radius: 0; /* No rounded corners for true retro */
+  margin-bottom: 1.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.memphis-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: calc(var(--shadow-offset) + 2px) calc(var(--shadow-offset) + 2px) 0px var(--color-border);
+}
+
+.memphis-card.pink { background-color: var(--color-primary); color: white; }
+.memphis-card.teal { background-color: var(--color-secondary); }
+.memphis-card.yellow { background-color: var(--color-tertiary); }
+
+.memphis-button {
+  background-color: var(--color-tertiary);
+  color: var(--color-text);
+  border: var(--border-width) solid var(--color-border);
+  box-shadow: 4px 4px 0px var(--color-border);
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-main);
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.1s;
+}
+
+.memphis-button:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px var(--color-border);
+}
+
+.memphis-button.primary {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.memphis-button.secondary {
+  background-color: var(--color-secondary);
+}
+
+.memphis-button.danger {
+  background-color: #ff0000;
+  color: white;
+}
+
+.memphis-input {
+  width: 100%;
+  padding: 0.75rem;
+  font-family: var(--font-main);
+  font-size: 1rem;
+  border: var(--border-width) solid var(--color-border);
+  box-shadow: 4px 4px 0px var(--color-border);
+  margin-bottom: 1rem;
+  background-color: white;
+  outline: none;
+}
+
+.memphis-input:focus {
+  background-color: #f0f8ff;
+  border-color: var(--color-primary);
+}
+
+/* Header Style */
+.memphis-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+  display: inline-block;
+  padding: 1rem 2rem;
+  background-color: var(--color-tertiary);
+  border: var(--border-width) solid var(--color-border);
+  box-shadow: var(--shadow-offset) var(--shadow-offset) 0px var(--color-border);
+  transform: rotate(-2deg);
+}
+
+/* Grid Layout */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flex-gap {
+  display: flex;
+  gap: 1rem;
+}
+
+.badge {
+  padding: 0.25rem 0.5rem;
+  border: 2px solid var(--color-border);
+  font-weight: bold;
+  font-size: 0.8rem;
+  background-color: white;
+}
+
+.badge.success { background-color: #00f5d4; }
+.badge.warning { background-color: #fee440; }
+.badge.danger { background-color: #ff477e; color: white; }
+
+/* SPX Specific Tracking Steps */
+.tracking-step {
+  padding-left: 1.5rem;
+  border-left: var(--border-width) solid var(--color-border);
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.tracking-step::before {
+  content: '';
+  position: absolute;
+  left: -9px;
+  top: 0;
+  width: 15px;
+  height: 15px;
+  background-color: var(--color-tertiary);
+  border: 2px solid var(--color-border);
+  border-radius: 50%;
+}
