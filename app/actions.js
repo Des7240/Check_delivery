@@ -1,6 +1,6 @@
 'use server';
 
-import { getOrders, addOrder, deleteOrder } from '@/lib/db';
+import { getOrders, addOrder, deleteOrder, updateOrderStatus } from '@/lib/db';
 import { scrapeSpxTracking } from '@/lib/spxScraper';
 import { revalidatePath } from 'next/cache';
 
@@ -44,6 +44,15 @@ export async function deleteOrderAction(trackingNumber) {
 export async function refreshSpxTrackingAction(trackingNumber) {
   try {
     const data = await scrapeSpxTracking(trackingNumber);
+    if (data.success) {
+      // Lưu lại trạng thái cuối cùng vào DB
+      await updateOrderStatus(trackingNumber, {
+        currentStatus: data.currentStatus,
+        steps: data.steps
+      });
+      // Bắt buộc load lại trang để component server fetch dữ liệu mới
+      revalidatePath('/');
+    }
     return { success: true, data };
   } catch (error) {
     return { error: error.message };
