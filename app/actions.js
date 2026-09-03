@@ -1,6 +1,7 @@
 'use server';
 
-import { getOrders, addOrder, deleteOrder, fetchSpxTracking } from '@/lib/db';
+import { getOrders, addOrder, deleteOrder } from '@/lib/db';
+import { scrapeSpxTracking } from '@/lib/spxScraper';
 import { revalidatePath } from 'next/cache';
 
 /**
@@ -42,7 +43,7 @@ export async function deleteOrderAction(trackingNumber) {
  */
 export async function refreshSpxTrackingAction(trackingNumber) {
   try {
-    const data = await fetchSpxTracking(trackingNumber);
+    const data = await scrapeSpxTracking(trackingNumber);
     return { success: true, data };
   } catch (error) {
     return { error: error.message };
